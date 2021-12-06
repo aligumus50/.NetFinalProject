@@ -1,10 +1,11 @@
-﻿using Entities.Abstract;
+﻿using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace DataAccess.Abstract
+/* Core katmanı diğer katmanı referans almaz alırsa o proje bağımlı olur. Burası evrensel bir katmandır. Herkes kullanabilmeli. */
+namespace Core.DataAccess
 {
     //T çalışacağımız tiptir.
 

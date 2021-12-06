@@ -1,5 +1,7 @@
-﻿using DataAccess.Abstract;
+﻿using Core.DataAccess.EntityFramework;
+using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,8 +11,16 @@ using System.Text;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfProductDal : IProductDal
+    //EfEntityRepositoryBase<Product,NorthwindContext>: Bu ifade IProductDal ın kızdığı, implemente et dediği operasyonlar bunda mevcut.
+    //Bende ondan inherit ediliyorum.
+
+    //Sen aynı zamanda IProductDal'sın (kim olduğunu unutma :) ) - Veri tabanına ait özel operasyonlar olabilir.
+    public class EfProductDal : EfEntityRepositoryBase<Product, NorthwindContext>, IProductDal
     {
+
+        //yorum satırı
+        #region
+        /*
         public void Add(Product entity)
         {
             //using kısaca işi bitince belleği temizlemesi için kullandık.
@@ -52,9 +62,9 @@ namespace DataAccess.Concrete.EntityFramework
         {
             using (NorthwindContext context = new NorthwindContext())
             {
-                /*context.Set<Product>().ToList() 
+                //context.Set<Product>().ToList() 
                 //Dbsetteki Product a yerleş. Veritabanındaki tabloyu listeye döndür.
-                //Kısaca select * from product*/
+                //Kısaca select * from product
 
                 return filter == null
                   ? context.Set<Product>().ToList()
@@ -69,6 +79,25 @@ namespace DataAccess.Concrete.EntityFramework
                 var updatedEntity = context.Entry(entity);
                 updatedEntity.State = EntityState.Modified;
                 context.SaveChanges();
+            }
+        }*/
+        #endregion
+        public List<ProductDetailDto> GetProductDetails()
+        {
+            using (NorthwindContext context = new NorthwindContext())
+            {
+                //context tablomuza karşılık geliyor.
+                var result = from p in context.Products
+                             join c in context.Categories
+                             on p.CategoryId equals c.CategoryId
+                             select new ProductDetailDto //Hangi kolonları istediğimiz. Sonucu bu kolonlara uydurarak ver.
+                             {
+                                 ProductId = p.ProductId, ProductName = p.ProductName,
+                                 CategoryName = c.CategoryName, UnitsInStock = p.UnitsInStock
+                             };
+
+                return result.ToList(); //dönen result sonucu Iqueryable dir.
+
             }
         }
     }
