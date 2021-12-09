@@ -16,14 +16,37 @@ namespace ConsoleUI
 
             //CategoryTest();
 
+            //ProductDetailDtoTest();
+
             ProductManager productManager = new ProductManager(new EfProductDal());
 
-            foreach (var product in productManager.GetProductDetails())
+            var result = productManager.GetProductDetails(); //işlemi çalıştırdık.
+
+            if (result.Success)
+            {
+                foreach (var product in result.Data)
+                {
+                    Console.WriteLine(product.ProductName + " / " + product.CategoryName);
+                }
+            }
+
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
+
+
+            Console.ReadLine();
+        }
+
+        private static void ProductDetailDtoTest()
+        {
+            ProductManager productManager = new ProductManager(new EfProductDal());
+
+            foreach (var product in productManager.GetProductDetails().Data)
             {
                 Console.WriteLine(product.ProductName + " / " + product.CategoryName);
             }
-
-            Console.ReadLine();
         }
 
         private static void CategoryTest()
@@ -40,21 +63,21 @@ namespace ConsoleUI
         {
             ProductManager productManager = new ProductManager(new EfProductDal());
 
-            foreach (var product in productManager.GetAll())
+            foreach (var product in productManager.GetAll().Data)
             {
                 Console.WriteLine(product.ProductName);
             }
 
             Console.WriteLine("******************");
 
-            foreach (var product in productManager.GetAllByCategoryId(2))
+            foreach (var product in productManager.GetAllByCategoryId(2).Data)
             {
                 Console.WriteLine(product.ProductName);
             }
 
             Console.WriteLine("******************");
 
-            foreach (var product in productManager.GetByUnitPrice(50, 100))
+            foreach (var product in productManager.GetByUnitPrice(50, 100).Data)
             {
                 Console.WriteLine(product.ProductName);
             }
