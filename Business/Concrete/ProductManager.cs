@@ -27,9 +27,9 @@ namespace Business.Concrete
             _productDal.Add(product);
             if (product.ProductName.Length < 2)
             {
-                return new ErrorResult(Messages.ProductAdded);
+                return new ErrorResult(Messages.ProductNameInvalid);
             }
-            return new SuccessResult(Messages.ProductNameInvalid);
+            return new SuccessResult(Messages.ProductAdded);
         }
 
         public IDataResult<List<Product>> GetAll()
@@ -39,7 +39,7 @@ namespace Business.Concrete
 
             //iş kodlarını geçtikten sonra veri erişimi çağırmamız gerek.
 
-            if (DateTime.Now.Hour==22)
+            if (DateTime.Now.Hour == 23)
             {
                 return new ErrorDataResult<List<Product>>(Messages.MaintanenceTime);
             }
