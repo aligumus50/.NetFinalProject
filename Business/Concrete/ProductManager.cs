@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 
 namespace Business.Concrete
 {
@@ -20,15 +24,42 @@ namespace Business.Concrete
             _productDal = productDal;
         }
         
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
             //business code
             //Eğer böyleyse, şöyleyse gibi işlem kodları burada yazılır.
-            _productDal.Add(product);
-            if (product.ProductName.Length < 2)
+
+
+            //Core katmanına taşıdık. Değişen sadece Product ve ProductValidator.
+            #region
+            /*var context = new ValidationContext<Product>(product);
+            ProductValidator productValidator = new ProductValidator();
+            var result = productValidator.Validate(context);
+            if (!result.IsValid)
+            {
+                throw new ValidationException(result.Errors);
+            }*/
+            #endregion
+
+            //Bu bir iş kuralı değil validationdur. Burada olmaz. fluent apiye taşıdık.
+            #region
+            /*if (product.ProductName.Length < 2)
             {
                 return new ErrorResult(Messages.ProductNameInvalid);
-            }
+            }*/
+            #endregion
+
+            //Tek satırda olsa burası yine çorbaya dönecek. :) O yüzden bunu yapma. Sadece iş kuralı.
+            //ValidationTool.Validate(new ProductValidator(), product);
+            //Ek olarak Loglama yapılacak.
+            //Ek olarak cache remobe yapılacak.
+            //Ek olarak performance testi
+            //Ek olarak Transaction
+            //Ek olarak Yetkilendirme
+
+
+            _productDal.Add(product);
             return new SuccessResult(Messages.ProductAdded);
         }
 

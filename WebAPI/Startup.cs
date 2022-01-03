@@ -38,8 +38,12 @@ namespace WebAPI
             //Web API'nin kendi içinde IOC Container yapýsý.
             //Biri senden ProductService isterse ona arkaplanda ProductManager oluþtur onu ver.
             //Kýsaca baðýmlýlýk görürsen bunu yap.
-            services.AddSingleton<IProductService, ProductManager>(); //Arkaplanda newleyip paketleyip constructora veriyor.
-            services.AddSingleton<IProductDal, EfProductDal>();
+            //services.AddSingleton<IProductService, ProductManager>(); //Arkaplanda newleyip paketleyip constructora veriyor.
+            //services.AddSingleton<IProductDal, EfProductDal>();
+
+            //Web API Program.cs içinde yaptýk.
+            //Kendi IOC yapýný kullanma benim bir IOC yapýlandýrmam var. Onu demememiz gerekiyor.
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
